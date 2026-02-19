@@ -1,0 +1,516 @@
+/* ===== PENGATURAN DASAR & VARIABEL WARNA ===== */
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-color: #10b981;
+    --background-color: #f3f4f6;
+    --card-bg-color: #ffffff;
+    --text-color: #1f2937;
+    --text-muted-color: #6b7280;
+    --border-color: #e5e7eb;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.card {
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ===== UTILITIES & BUTTONS ===== */
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-small {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+/* ===== LOADING BAR ===== */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: var(--primary-color);
+    width: 0%; /* Lebar akan dianimasikan via JS nantinya */
+    z-index: 9999;
+    transition: width 0.3s;
+    animation: loading-animation 1.5s infinite;
+}
+
+@keyframes loading-animation {
+    0% { width: 0%; }
+    50% { width: 90%; }
+    100% { width: 100%; opacity: 0; }
+}
+
+
+/* ===== HALAMAN AUTENTIKASI (LOGIN & REGISTER) ===== */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 32px;
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.auth-header .icon-logo {
+    font-size: 40px;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+}
+.auth-header h2 {
+    margin-bottom: 8px;
+}
+.auth-header p {
+    color: var(--text-muted-color);
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+}
+.auth-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+}
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--text-muted-color);
+}
+
+/* ===== KONTEN UTAMA APLIKASI ===== */
+.app-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Navigasi --- */
+header {
+    background-color: var(--card-bg-color);
+    padding: 12px 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.nav-brand h1 { font-size: 1.25rem; }
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+}
+.nav-links a {
+    color: var(--text-muted-color);
+    font-weight: 500;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+}
+.nav-links a.active, .nav-links a:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.nav-user .btn-logout {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-muted-color);
+    cursor: pointer;
+}
+.nav-user .btn-logout:hover {
+    color: var(--danger-color);
+}
+
+/* --- Form Thread Baru --- */
+.new-thread-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.new-thread-form input, .new-thread-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+.new-thread-form textarea {
+    resize: vertical;
+}
+
+/* --- Filter Kategori --- */
+.thread-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.thread-filters h4 {
+    color: var(--text-muted-color);
+    font-weight: 500;
+}
+.btn-category {
+    background-color: #e5e7eb;
+    color: var(--text-muted-color);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn-category:hover, .btn-category.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+
+/* --- Daftar & Item Thread --- */
+.thread-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.thread-item .thread-category {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.thread-item .thread-title {
+    margin-bottom: 12px;
+    font-size: 1.25rem;
+}
+.thread-item .thread-body {
+    color: var(--text-muted-color);
+    margin-bottom: 16px;
+    /* Memotong teks yang terlalu panjang */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Hanya tampilkan 2 baris */
+    -webkit-box-orient: vertical;
+}
+
+.thread-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+.thread-actions, .thread-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.thread-actions span, .thread-info span {
+    color: var(--text-muted-color);
+    font-size: 0.9rem;
+}
+.btn-vote {
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted-color);
+}
+.btn-vote:hover {
+    background-color: var(--background-color);
+    border-color: #d1d5db;
+}
+.btn-vote.voted {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-color: #e0e7ff;
+}
+
+/* --- Halaman Detail --- */
+.thread-detail .thread-title { font-size: 2rem; }
+.thread-info-detail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+.thread-info-detail p { line-height: 1.2; margin: 0;}
+.thread-info-detail small { color: var(--text-muted-color); }
+
+.thread-body-full p {
+    margin-bottom: 1em;
+}
+
+.comments-section { margin-top: 24px; }
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.comment-form textarea {
+     width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
+}
+.comment-form button { align-self: flex-end; }
+.comments-header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 16px;
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.comment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+.comment-main {
+    display: flex;
+    gap: 12px;
+}
+.comment-content { flex: 1; }
+.comment-content p { margin: 0; }
+.comment-author { font-size: 0.9rem; margin-bottom: 4px; }
+
+/* --- Leaderboard --- */
+.leaderboard h2 {
+    margin-bottom: 24px;
+    text-align: center;
+}
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.leaderboard-item, .leaderboard-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+}
+.leaderboard-header {
+    font-weight: 600;
+    color: var(--text-muted-color);
+    border-bottom: 2px solid var(--border-color);
+}
+.leaderboard-item {
+    background-color: var(--background-color);
+}
+.leaderboard-item:nth-child(2) { /* Peringkat 1 */
+    background-color: #fffbeb;
+    border: 1px solid #fde68a;
+}
+.leaderboard-item:nth-child(3) { /* Peringkat 2 */
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+}
+.leaderboard-item:nth-child(4) { /* Peringkat 3 */
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+}
+.rank {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+}
+.leaderboard-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.score {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: right;
+    color: var(--primary-color);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+    }
+    .app-container {
+        padding: 10px;
+    }
+    header {
+        padding: 10px;
+        position: static;
+    }
+    nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+    }
+    .thread-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .leaderboard-item, .leaderboard-header {
+        grid-template-columns: 40px 1fr 60px;
+        gap: 10px;
+        padding: 8px;
+    }
+    .score {
+        font-size: 1rem;
+    }
+}
+/* ===== DARK MODE STYLES ===== */
+body.dark-mode {
+  --background-color: #1f2937;
+  --card-bg-color: #374151;
+  --text-color: #f3f4f6;
+  --text-muted-color: #9ca3af;
+  --border-color: #4b5563;
+}
+
+/* Styling untuk tombol toggle tema */
+.btn-theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--text-muted-color);
+  cursor: pointer;
+  padding: 5px;
+}
+
+.btn-theme-toggle:hover {
+  color: var(--primary-color);
+}
+
+.dark-mode .btn-theme-toggle {
+  color: #f59e0b; /* Warna matahari (kuning) di dark mode */
+}
+
+.empty-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted-color);
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  background-color: var(--background-color);
+}

@@ -1,0 +1,13 @@
+/* src/styles/nprogress.css */
+#nprogress {
+  pointer-events: none;
+}
+#nprogress .bar {
+  background: var(--primary-color, #4f46e5); /* Menggunakan variabel warna Anda */
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
