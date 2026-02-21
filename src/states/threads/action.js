@@ -1,4 +1,4 @@
-import { showLoadingActionCreator, hideLoadingActionCreator } from '../loading/action'; // <-- PERUBAHAN: Import dari action loading manual
+import { showLoadingActionCreator, hideLoadingActionCreator } from '../loading/action';
 import api from '../../utils/api';
 
 const ActionType = {
@@ -8,29 +8,23 @@ const ActionType = {
 };
 
 function receiveThreadsActionCreator(threads) {
-  return {
-    type: ActionType.RECEIVE_THREADS,
-    payload: { threads },
-  };
+  return { type: ActionType.RECEIVE_THREADS, payload: { threads } };
 }
 
 function addThreadActionCreator(thread) {
-  return {
-    type: ActionType.ADD_THREAD,
-    payload: { thread },
-  };
+  return { type: ActionType.ADD_THREAD, payload: { thread } };
 }
 
-function toggleVoteThreadActionCreator({ threadId, userId }) {
+// <-- PERUBAHAN: Tambahkan voteType ke dalam parameter dan payload
+function toggleVoteThreadActionCreator({ threadId, userId, voteType }) {
   return {
     type: ActionType.TOGGLE_VOTE_THREAD,
-    payload: { threadId, userId },
+    payload: { threadId, userId, voteType }, 
   };
 }
 
 function asyncAddThread({ title, body, category = '' }) {
   return async (dispatch) => {
-    // <-- PERUBAHAN: Gunakan action creator loading manual
     dispatch(showLoadingActionCreator());
     try {
       const thread = await api.createThread({ title, body, category });
@@ -38,7 +32,6 @@ function asyncAddThread({ title, body, category = '' }) {
     } catch (error) {
       alert(error.message);
     }
-    // <-- PERUBAHAN: Gunakan action creator loading manual
     dispatch(hideLoadingActionCreator());
   };
 }
@@ -46,19 +39,26 @@ function asyncAddThread({ title, body, category = '' }) {
 function asyncToggleVoteThread(threadId, voteType) {
   return async (dispatch, getState) => {
     const { authUser } = getState();
-    // Optimistic update: Langsung ubah UI sebelum API call selesai
-    dispatch(toggleVoteThreadActionCreator({ threadId, userId: authUser.id }));
-    // <-- PERUBAHAN: Gunakan action creator loading manual
+
+    // <-- PERUBAHAN: Kirimkan voteType ke action creator
+    dispatch(toggleVoteThreadActionCreator({ threadId, userId: authUser.id, voteType }));
     dispatch(showLoadingActionCreator());
 
     try {
-      await api.voteThread(threadId, voteType);
+      if (voteType === 'up-vote') {
+        await api.upVoteThread(threadId);
+      } else if (voteType === 'down-vote') {
+        await api.downVoteThread(threadId);
+      } else if (voteType === 'neutral-vote') {
+        await api.neutralizeThreadVote(threadId);
+      }
     } catch (error) {
       alert(error.message);
-      // Rollback: Kembalikan state jika API call gagal
-      dispatch(toggleVoteThreadActionCreator({ threadId, userId: authUser.id }));
+      // Catatan: Idealnya rollback menggunakan state sebelumnya, 
+      // tapi untuk sementara kita netralkan jika gagal agar UI tidak out-of-sync
+      dispatch(toggleVoteThreadActionCreator({ threadId, userId: authUser.id, voteType: 'neutral-vote' }));
     }
-    // <-- PERUBAHAN: Gunakan action creator loading manual
+    
     dispatch(hideLoadingActionCreator());
   };
 }
@@ -67,7 +67,7 @@ export {
   ActionType,
   receiveThreadsActionCreator,
   addThreadActionCreator,
-  toggleVoteThreadActionCreator, // Ditambahkan kembali untuk kelengkapan
+  toggleVoteThreadActionCreator,
   asyncAddThread,
   asyncToggleVoteThread,
 };

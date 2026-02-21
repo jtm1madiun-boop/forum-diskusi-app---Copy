@@ -9,22 +9,21 @@ function threadsReducer(threads = [], action = {}) {
     case ActionType.TOGGLE_VOTE_THREAD:
       return threads.map((thread) => {
         if (thread.id === action.payload.threadId) {
-          const { userId } = action.payload;
-          let newUpVotesBy = [...thread.upVotesBy];
-          let newDownVotesBy = [...thread.downVotesBy];
+          // <-- PERUBAHAN: Ambil voteType dari payload
+          const { userId, voteType } = action.payload; 
+          
+          // Pertama, kita bersihkan dulu user ID ini dari kedua array (reset jadi netral)
+          let newUpVotesBy = thread.upVotesBy.filter((id) => id !== userId);
+          let newDownVotesBy = thread.downVotesBy.filter((id) => id !== userId);
 
-          if (thread.upVotesBy.includes(userId)) {
-            // User sudah up-vote, sekarang netral
-            newUpVotesBy = newUpVotesBy.filter((id) => id !== userId);
-          } else if (thread.downVotesBy.includes(userId)) {
-            // User sudah down-vote, sekarang up-vote
-            newDownVotesBy = newDownVotesBy.filter((id) => id !== userId);
+          // Kedua, kita masukkan user ID ke array yang sesuai berdasarkan tipe vote
+          if (voteType === 'up-vote') {
             newUpVotesBy.push(userId);
-          } else {
-            // User belum vote, sekarang up-vote
-            newUpVotesBy.push(userId);
+          } else if (voteType === 'down-vote') {
+            newDownVotesBy.push(userId);
           }
-          // Logika ini bisa disesuaikan lagi untuk menangani down-vote secara terpisah
+          // Jika voteType === 'neutral-vote', tidak perlu di-push ke mana-mana (tetap netral)
+
           return {
             ...thread,
             upVotesBy: newUpVotesBy,

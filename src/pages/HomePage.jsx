@@ -1,49 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { asyncPopulateUsersAndThreads } from '../states/shared/action';
-import { asyncAddThread } from '../states/threads/action';
+import { asyncAddThread, asyncToggleVoteThread } from '../states/threads/action'; // <-- PERUBAHAN: Import aksi vote
 import NewThreadInput from '../components/NewThreadInput';
 import CategoryFilters from '../components/CategoryFilters';
 import ThreadList from '../components/ThreadList';
 
 function HomePage() {
-  // <-- PERUBAHAN: Ambil setiap state secara terpisah untuk optimisasi
-  // Ini mencegah re-render yang tidak perlu jika state lain (misal: theme) berubah.
   const threads = useSelector((states) => states.threads || []);
   const users = useSelector((states) => states.users || []);
   const authUser = useSelector((states) => states.authUser);
 
   const dispatch = useDispatch();
-
-  // State lokal untuk filter kategori
   const [category, setCategory] = useState('');
 
-  // Ambil data saat komponen pertama kali dimuat
   useEffect(() => {
     dispatch(asyncPopulateUsersAndThreads());
   }, [dispatch]);
 
-  // Handler untuk menambah thread baru
   const onAddThread = ({ title, body, category }) => {
     dispatch(asyncAddThread({ title, body, category }));
   };
 
-  // Handler untuk mengubah filter kategori
   const onCategoryChange = (newCategory) => {
     setCategory(newCategory);
   };
 
-  // Buat daftar kategori unik dari data threads
+  // <-- PERUBAHAN: Fungsi handler untuk vote thread
+  const onVote = (threadId, voteType) => {
+    dispatch(asyncToggleVoteThread(threadId, voteType));
+  };
+
   const categoryList = threads.map((thread) => thread.category);
   const uniqueCategories = [...new Set(categoryList)];
 
-  // Filter threads berdasarkan kategori yang aktif, lalu gabungkan dengan data user
   const threadList = threads
     .filter((thread) => (category ? thread.category === category : true))
     .map((thread) => ({
       ...thread,
       user: users.find((user) => user.id === thread.ownerId),
-      authUser: authUser.id,
+      authUser: authUser ? authUser.id : null, // Mencegah error jika belum login
     }));
 
   return (
@@ -56,7 +52,8 @@ function HomePage() {
         onCategoryChange={onCategoryChange}
       />
 
-      <ThreadList threads={threadList} />
+      {/* <-- PERUBAHAN: Teruskan onVote ke ThreadList */}
+      <ThreadList threads={threadList} onVote={onVote} />
     </section>
   );
 }

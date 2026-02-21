@@ -2,29 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ThreadItem from './ThreadItem';
 
-function ThreadList({ threads }) {
-  // Jika tidak ada thread, tampilkan pesan khusus
+// <-- PERUBAHAN: Tambahkan onVote sebagai parameter
+function ThreadList({ threads, onVote }) {
   if (threads.length === 0) {
     return (
-      // <-- PERUBAHAN: Kelas CSS dan teks diubah untuk tampilan 'empty state'
       <div className="card empty-state">
         <p>Belum ada diskusi. Jadilah yang pertama memulai!</p>
       </div>
     );
   }
 
-  // Jika ada thread, tampilkan daftar thread
   return (
     <div className="thread-list">
       {threads.map((thread) => (
-        <ThreadItem key={thread.id} {...thread} />
+        // <-- PERUBAHAN: Teruskan onVote ke ThreadItem
+        <ThreadItem key={thread.id} {...thread} onVote={onVote} />
       ))}
     </div>
   );
 }
 
+// <-- PERUBAHAN: Tambahkan onVote pada PropTypes
 ThreadList.propTypes = {
   threads: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onVote: PropTypes.func.isRequired, 
 };
 
 export default ThreadList;
