@@ -12,9 +12,11 @@ import { asyncPreloadProcess } from './states/isPreload/action';
 import { asyncUnsetAuthUser } from './states/authUser/action';
 
 function App() {
-  // 1. Ambil state authUser dan isPreload
   const authUser = useSelector((states) => states.authUser);
   const isPreload = useSelector((states) => states.isPreload);
+  
+  // <-- PERUBAHAN 1: Ambil state theme dari Redux
+  const theme = useSelector((states) => states.theme); 
 
   const dispatch = useDispatch();
 
@@ -22,12 +24,21 @@ function App() {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
 
-  // 2. Buat fungsi onSignOut untuk dioper ke Navigation
+  // <-- PERUBAHAN 2: Tambahkan useEffect untuk memantau perubahan theme
+  useEffect(() => {
+    // Jika theme adalah 'dark', tambahkan class 'dark-mode' ke body
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    } else {
+      // Jika tidak, hapus class 'dark-mode' dari body
+      document.body.classList.remove('dark-mode');
+    }
+  }, [theme]); // Efek ini akan dijalankan ulang setiap kali 'theme' berubah
+
   const onSignOut = () => {
     dispatch(asyncUnsetAuthUser());
   };
 
-  // Selama proses preload, jangan tampilkan apa-apa
   if (isPreload) {
     return null;
   }
@@ -36,22 +47,20 @@ function App() {
     <>
       <Loading />
       <div className="app-container">
-        {/* 3. Render Header & Navigation HANYA JIKA authUser tidak null */}
         {authUser && (
           <header>
             <Navigation authUser={authUser} signOut={onSignOut} />
           </header>
         )}
+       
         <main>
           <Routes>
-            {/* Rute ini ditampilkan jika BELUM LOGIN */}
             {authUser === null ? (
               <>
                 <Route path="/*" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
               </>
             ) : (
-              /* Rute ini ditampilkan jika SUDAH LOGIN */
               <>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/threads/:id" element={<DetailPage />} />
