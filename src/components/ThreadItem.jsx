@@ -60,7 +60,10 @@ function ThreadItem({
             </>
           )}
           <span className="comment-count">
-            <i className="fa-solid fa-comment" /> {totalComments} Komentar
+            {/* Kita bungkus dengan Link menuju halaman detail id thread tersebut */}
+            <Link to={`/threads/${id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+              <i className="fa-solid fa-comment" /> {totalComments} Komentar
+            </Link>
           </span>
         </div>
         <div className="thread-info">
