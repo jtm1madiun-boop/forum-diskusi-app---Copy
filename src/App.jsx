@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { ToastContainer } from 'react-toastify'; // <-- PERUBAHAN: Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // <-- PERUBAHAN: Import CSS Toastify
+
 import Loading from './components/Loading';
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
@@ -14,8 +17,6 @@ import { asyncUnsetAuthUser } from './states/authUser/action';
 function App() {
   const authUser = useSelector((states) => states.authUser);
   const isPreload = useSelector((states) => states.isPreload);
-  
-  // <-- PERUBAHAN 1: Ambil state theme dari Redux
   const theme = useSelector((states) => states.theme); 
 
   const dispatch = useDispatch();
@@ -24,16 +25,13 @@ function App() {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
 
-  // <-- PERUBAHAN 2: Tambahkan useEffect untuk memantau perubahan theme
   useEffect(() => {
-    // Jika theme adalah 'dark', tambahkan class 'dark-mode' ke body
     if (theme === 'dark') {
       document.body.classList.add('dark-mode');
     } else {
-      // Jika tidak, hapus class 'dark-mode' dari body
       document.body.classList.remove('dark-mode');
     }
-  }, [theme]); // Efek ini akan dijalankan ulang setiap kali 'theme' berubah
+  }, [theme]);
 
   const onSignOut = () => {
     dispatch(asyncUnsetAuthUser());
@@ -70,6 +68,9 @@ function App() {
           </Routes>
         </main>
       </div>
+      
+      {/* <-- PERUBAHAN: Letakkan ToastContainer di sini */}
+      <ToastContainer position="top-center" autoClose={3000} theme={theme} />
     </>
   );
 }

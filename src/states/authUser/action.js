@@ -1,5 +1,6 @@
 import { showLoadingActionCreator, hideLoadingActionCreator } from '../loading/action';
 import api from '../../utils/api';
+import { toast } from 'react-toastify'; // <-- PERUBAHAN: Import toast
 
 const ActionType = {
   SET_AUTH_USER: 'SET_AUTH_USER',
@@ -7,17 +8,11 @@ const ActionType = {
 };
 
 function setAuthUserActionCreator(authUser) {
-  return {
-    type: ActionType.SET_AUTH_USER,
-    payload: { authUser },
-  };
+  return { type: ActionType.SET_AUTH_USER, payload: { authUser } };
 }
 
 function unsetAuthUserActionCreator() {
-  return {
-    type: ActionType.UNSET_AUTH_USER,
-    payload: { authUser: null },
-  };
+  return { type: ActionType.UNSET_AUTH_USER, payload: { authUser: null } };
 }
 
 function asyncSetAuthUser({ email, password }) {
@@ -28,20 +23,19 @@ function asyncSetAuthUser({ email, password }) {
       api.putAccessToken(token);
       const authUser = await api.getOwnProfile();
       dispatch(setAuthUserActionCreator(authUser));
+      toast.success('Login berhasil!'); // <-- PERUBAHAN: Toast success
     } catch (error) {
-      alert(error.message);
+      toast.error(error.message); // <-- PERUBAHAN: Ganti alert dengan toast.error
     }
     dispatch(hideLoadingActionCreator());
   };
 }
 
-// Thunk untuk proses logout pengguna
 function asyncUnsetAuthUser() {
   return (dispatch) => {
-    // 1. Dispatch action untuk mengosongkan authUser di state Redux
     dispatch(unsetAuthUserActionCreator());
-    // 2. Hapus access token dari local storage
     api.putAccessToken('');
+    toast.info('Anda telah logout.'); // <-- PERUBAHAN: Toast info
   };
 }
 
@@ -50,5 +44,5 @@ export {
   setAuthUserActionCreator,
   unsetAuthUserActionCreator,
   asyncSetAuthUser,
-  asyncUnsetAuthUser, // Menambahkan fungsi baru ke export
+  asyncUnsetAuthUser,
 };
