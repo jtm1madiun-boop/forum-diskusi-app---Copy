@@ -45,6 +45,7 @@ jobs:
       - name: Run Cypress E2E Tests
         uses: cypress-io/github-action@v6
         with:
+          install: false
           # Menjalankan server Vite di latar belakang
           start: npm run dev
           # Menunggu hingga server siap menerima request
