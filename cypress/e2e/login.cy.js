@@ -1,6 +1,10 @@
 describe('Login Flow E2E', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:5173/'); 
+    // Kunjungi halaman utama atau halaman login
+    cy.visit('http://localhost:5173/');
+    
+    // Jika aplikasi Anda mengharuskan klik navigasi login terlebih dahulu,
+    // Anda bisa menambahkan perintah klik navigasinya di sini.
   });
 
   it('should display login page correctly', () => {
@@ -10,7 +14,12 @@ describe('Login Flow E2E', () => {
   });
 
   it('should login and navigate to homepage', () => {
-    // 1. MOCKING API: Memalsukan balasan server agar selalu sukses
+    // 1. KETIK EMAIL DAN PASSWORD DULU (sebelum API di-mock)
+    cy.get('input[id="login-email"]').should('be.visible').type('aliizzudin@yahoo.co.id');
+    cy.get('input[id="login-password"]').should('be.visible').type('izulganteng');
+
+    // 2. PASANG PERANGKAP MOCKING TEPAT SEBELUM KLIK LOGIN
+    // Ini memastikan loading awal aplikasi tidak terganggu oleh data palsu
     cy.intercept('POST', 'https://forum-api.dicoding.dev/v1/login', {
       statusCode: 200,
       body: { status: 'success', message: 'Login success', data: { token: 'dummy-token' } },
@@ -21,14 +30,10 @@ describe('Login Flow E2E', () => {
       body: { status: 'success', message: 'OK', data: { user: { id: 'user-1', name: 'Testing User', email: 'test@gmail.com', avatar: 'url' } } },
     });
 
-    // 2. Ketik email & password
-    cy.get('input[id="login-email"]').type('aliizzudin@yahoo.co.id');
-    cy.get('input[id="login-password"]').type('izulganteng');
-    
-    // 3. Klik tombol login
+    // 3. KLIK TOMBOL LOGIN
     cy.get('button').contains(/^Login$/).click();
     
-    // 4. Memastikan diarahkan ke homepage (dengan tambahan waktu tunggu jika komputer lambat)
+    // 4. VERIFIKASI HALAMAN BERPINDAH
     cy.get('.nav-brand h1', { timeout: 10000 }).should('contain', 'Forum Diskusi');
   });
 });
