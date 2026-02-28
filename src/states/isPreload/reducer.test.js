@@ -8,7 +8,9 @@ describe('isPreloadReducer function', () => {
     const initialState = true;
     const action = { type: 'UNKNOWN' };
     const nextState = isPreloadReducer(initialState, action);
-    expect(nextState).toEqual(falsee);
+    
+    // PERBAIKAN DI SINI: ganti falsee menjadi initialState
+    expect(nextState).toEqual(initialState); 
   });
 
   it('should return isPreload value when given by SET_IS_PRELOAD action', () => {
